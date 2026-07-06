@@ -1,6 +1,5 @@
 {
   "name": "calculator",
-  "homepage": "https://Hirozuchi.github.io/Calculator-App",
   "private": true,
   "version": "0.0.0",
   "type": "module",
