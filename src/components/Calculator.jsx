@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import axios from 'axios';
 import Keys from './Keys';
 
@@ -20,12 +20,10 @@ const Calculator = () => {
 
   const handleCalculate = async (currentExpression) => {
     if (!currentExpression) return;
-    
     try {
       const response = await axios.post('http://127.0.0.1:8000/calculate', {
         expression: currentExpression
       });
-      
       if (response.data.success) {
         setResult(response.data.result);
         setShowResult(true);
@@ -36,8 +34,6 @@ const Calculator = () => {
       setShowResult(true);
     }
   };
-
-  // Click Handler Logic
   const handleKeyClick = (label) => {
     if (label === 'AC') {
       setExpression('');
@@ -63,6 +59,37 @@ const Calculator = () => {
       }
     }
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      const { key } = event;
+
+      if (key >= '0' && key <= '9') {
+        handleKeyClick(key);
+      } else if (key === '+' || key === '-' || key === '%', key === '/') {
+        handleKeyClick(key);
+      } else if (key === '*' || key.toLowerCase() === 'x') {
+        handleKeyClick('X');
+      } else if (key === ',' || key === '.') {
+        handleKeyClick(',');
+      } else if (key === 'Enter' || key === '=') {
+        event.preventDefault(); 
+        handleKeyClick('EQUALS');
+      } else if (key === 'Backspace') {
+        handleKeyClick('C');
+      } else if (key === 'Escape') {
+        handleKeyClick('AC');
+      }
+    };
+
+
+    window.addEventListener('keydown', handleKeyDown);
+
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [expression, showResult]); 
 
   return (
     <div className='min-w-[320px] bg-[#1c1d22] flex flex-col gap-4 p-4 rounded-2xl shadow-xl'>
