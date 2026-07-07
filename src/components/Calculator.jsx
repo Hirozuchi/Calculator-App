@@ -93,7 +93,7 @@ const Calculator = () => {
 
   return (
     <div className='min-w-[320px] bg-[#1c1d22] flex flex-col gap-4 p-4 rounded-2xl shadow-xl'>
-      <div className='overflow-x-auto bg-[#25252a] min-h-[90px] flex items-end justify-end flex-col p-4 rounded-[10px] select-none'>
+      <div className='overflow-x-auto bg-[#25252a] min-h-22.5 flex items-end justify-end flex-col p-4 rounded-[10px] select-none'>
         <div className={operationClass}>{expression || '0'}</div>
         {showResult && (
           <div className={resultClass}>= {result}</div>
