@@ -1,12 +1,17 @@
-import React from 'react'
+import React from 'react';
 
-const Keys = ({label, keyClass}) => {
-  const equalClass = 'col-[span_2] bg-[#7289da] text-[#FFFFFFfF] font-semibold hover:bg-[#7289da]';
+const Keys = ({ label, keyClass, onClick }) => {
+  const equalClass = 'col-[span_2] bg-[#7289da] text-[#FFFFFF] font-semibold hover:bg-[#5b73c7]';
+  const baseClass = 'bg-[#25252a] text-white flex cursor-pointer items-center justify-center p-4 rounded-[5px] hover:bg-[#7289da] transition-colors duration-150 border-none outline-none select-none';
 
   return (
-    <div className={`bg-[#25252a] flex cursor-pointer items-center justify-center p-4 rounded-[5px] hover:bg-[#7289da]
-      ${keyClass && equalClass}`}>{label}</div>
-  )
-}
+    <button 
+      onClick={onClick} 
+      className={`${baseClass} ${keyClass === 'equals' ? equalClass : ''}`}
+    >
+      {label}
+    </button>
+  );
+};
 
-export default Keys
+export default Keys;
