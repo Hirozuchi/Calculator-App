@@ -34,6 +34,8 @@ const Calculator = () => {
       setShowResult(true);
     }
   };
+
+  // Essa função agora lida só com cliques nos botões visuais da tela
   const handleKeyClick = (label) => {
     if (label === 'AC') {
       setExpression('');
@@ -60,36 +62,61 @@ const Calculator = () => {
     }
   };
 
+  // Gerencia o evento global de teclado isolando a lógica de estado
   useEffect(() => {
+    const processKey = (label) => {
+      if (label === 'AC') {
+        setExpression('');
+        setResult('');
+        setShowResult(false);
+      } else if (label === 'C') {
+        if (showResult) {
+          setExpression('');
+          setResult('');
+          setShowResult(false);
+        } else {
+          setExpression(prev => prev.slice(0, -1));
+        }
+      } else if (label === 'EQUALS') {
+        handleCalculate(expression);
+      } else {
+        if (showResult) {
+          setExpression(label);
+          setResult('');
+          setShowResult(false);
+        } else {
+          setExpression(prev => prev + label);
+        }
+      }
+    };
+
     const handleKeyDown = (event) => {
       const { key } = event;
 
       if (key >= '0' && key <= '9') {
-        handleKeyClick(key);
-      } else if (key === '+' || key === '-' || key === '%', key === '/') {
-        handleKeyClick(key);
+        processKey(key);
+      } else if (key === '+' || key === '-' || key === '%' || key === '/') { // Corrigido a vírgula para || aqui
+        processKey(key);
       } else if (key === '*' || key.toLowerCase() === 'x') {
-        handleKeyClick('X');
+        processKey('X');
       } else if (key === ',' || key === '.') {
-        handleKeyClick(',');
+        processKey(',');
       } else if (key === 'Enter' || key === '=') {
         event.preventDefault(); 
-        handleKeyClick('EQUALS');
+        processKey('EQUALS');
       } else if (key === 'Backspace') {
-        handleKeyClick('C');
+        processKey('C');
       } else if (key === 'Escape') {
-        handleKeyClick('AC');
+        processKey('AC');
       }
     };
 
-
     window.addEventListener('keydown', handleKeyDown);
-
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [expression, showResult]); 
+  }, [expression, showResult]); // ESLint agora não reclama porque processKey tá no escopo correto
 
   return (
     <div className='min-w-[320px] bg-[#1c1d22] flex flex-col gap-4 p-4 rounded-2xl shadow-xl'>
