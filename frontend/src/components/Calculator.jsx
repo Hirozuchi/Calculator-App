@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'; 
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 import Keys from './Keys';
 
 const Calculator = () => {
@@ -66,7 +66,7 @@ const Calculator = () => {
 
       if (key >= '0' && key <= '9') {
         handleKeyClick(key);
-      } else if (key === '+' || key === '-' || key === '%', key === '/') {
+      } else if (key === '+' || key === '-' || key === '%' || key === '/') {
         handleKeyClick(key);
       } else if (key === '*' || key.toLowerCase() === 'x') {
         handleKeyClick('X');
