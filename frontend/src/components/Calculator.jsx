@@ -65,12 +65,10 @@ const Calculator = () => {
       } else {
         setExpression(prev => {
           if (prev === '') {
-            // Only allow a leading '-' for negative numbers
             return label === '-' ? label : prev;
           }
           const lastChar = prev[prev.length - 1];
           if (OPERATORS.includes(lastChar)) {
-            // Replace the previous operator instead of stacking two in a row
             return prev.slice(0, -1) + label;
           }
           return prev + label;
@@ -134,11 +132,11 @@ const Calculator = () => {
   }, [expression, showResult]); 
 
   return (
-    <div className='min-w-[320px] bg-[#1c1d22] flex flex-col gap-4 p-4 rounded-2xl shadow-xl'>
-      <div className='overflow-x-auto bg-[#25252a] min-h-22.5 flex items-end justify-end flex-col p-4 rounded-[10px] select-none'>
-        <div className={operationClass}>{expression || '0'}</div>
+    <div className='w-[320px] shrink-0 bg-[#1c1d22] flex flex-col gap-4 p-4 rounded-2xl shadow-xl'>
+      <div className='w-full min-w-0 overflow-x-auto bg-[#25252a] min-h-22.5 flex items-end justify-end flex-col p-4 rounded-[10px] select-none'>
+        <div className={`${operationClass} w-full whitespace-nowrap`}>{expression || '0'}</div>
         {showResult && (
-          <div className={resultClass}>= {result}</div>
+          <div className={`${resultClass} w-full text-right whitespace-nowrap`}>= {result}</div>
         )}
       </div>
       
