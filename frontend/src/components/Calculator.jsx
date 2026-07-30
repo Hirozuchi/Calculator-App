@@ -15,6 +15,47 @@ const Calculator = () => {
   const [result, setResult] = useState('');
   const [showResult, setShowResult] = useState(false);
   const OPERATORS = ['+', '-', 'X', '/'];
+  
+  const formatNumber = (num) => {
+    if (Number.isInteger(num)) return String(num);
+    const rounded = Math.round(num * 1e10) / 1e10;
+    return String(rounded).replace('.', ',');
+  };
+
+  const toFloat = (str) => parseFloat(str.replace(',', '.'));
+  const findLastOperatorIndex = (str) => {
+    for (let i = str.length - 1; i >= 1; i--) {
+      if (OPERATORS.includes(str[i])) return i;
+    }
+    return -1;
+  };
+
+  const applyPercent = (expr) => {
+    const opIndex = findLastOperatorIndex(expr);
+    if (opIndex === -1) {
+      // Standalone number: just divide by 100
+      const value = toFloat(expr);
+      if (Number.isNaN(value)) return expr;
+      return formatNumber(value / 100);
+    }
+    const operator = expr[opIndex];
+    const before = expr.slice(0, opIndex);
+    const bStr = expr.slice(opIndex + 1);
+    const b = toFloat(bStr);
+    if (Number.isNaN(b)) return expr;
+
+    let percentValue;
+    if (operator === '+' || operator === '-') {
+      const baseOpIndex = findLastOperatorIndex(before);
+      const aStr = baseOpIndex === -1 ? before : before.slice(baseOpIndex + 1);
+      const a = toFloat(aStr);
+      percentValue = Number.isNaN(a) ? b / 100 : (a * b) / 100;
+    } else {
+      percentValue = b / 100;
+    }
+    return before + operator + formatNumber(percentValue);
+  };
+
   const operationClass = 'text-[1.2rem] tracking-[2px] flex gap-[5px] items-center text-[#FFFFFF7F] justify-end';
   const resultClass = 'text-[1.7rem] text-white font-semibold transition-all';
 
