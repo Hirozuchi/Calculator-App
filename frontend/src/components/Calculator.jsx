@@ -14,7 +14,7 @@ const Calculator = () => {
   const [expression, setExpression] = useState('');
   const [result, setResult] = useState('');
   const [showResult, setShowResult] = useState(false);
-
+  const OPERATORS = ['+', '-', 'X', '/'];
   const operationClass = 'text-[1.2rem] tracking-[2px] flex gap-[5px] items-center text-[#FFFFFF7F] justify-end';
   const resultClass = 'text-[1.7rem] text-white font-semibold transition-all';
 
@@ -49,6 +49,48 @@ const Calculator = () => {
       }
     } else if (label === 'EQUALS') {
       handleCalculate(expression);
+    } else if (label === '%') {
+      if (showResult) {
+        setExpression(applyPercent(result));
+        setResult('');
+        setShowResult(false);
+      } else if (expression) {
+        setExpression(prev => applyPercent(prev));
+      }
+    } else if (OPERATORS.includes(label)) {
+      if (showResult) {
+        setExpression(result + label);
+        setResult('');
+        setShowResult(false);
+      } else {
+        setExpression(prev => {
+          if (prev === '') {
+            // Only allow a leading '-' for negative numbers
+            return label === '-' ? label : prev;
+          }
+          const lastChar = prev[prev.length - 1];
+          if (OPERATORS.includes(lastChar)) {
+            // Replace the previous operator instead of stacking two in a row
+            return prev.slice(0, -1) + label;
+          }
+          return prev + label;
+        });
+      }
+    } else if (label === ',') {
+      if (showResult) {
+        setExpression('0,');
+        setResult('');
+        setShowResult(false);
+      } else {
+        setExpression(prev => {
+          const segments = prev.split(/[+\-X/]/);
+          const currentSegment = segments[segments.length - 1];
+          if (currentSegment.includes(',')) {
+            return prev;
+          }
+          return prev === '' ? '0,' : prev + label;
+        });
+      }
     } else {
       if (showResult) {
         setExpression(label);
